@@ -1,0 +1,18 @@
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("https://api.na3.adobesign.com/api/rest/v6/agreements");
+            request.Headers.Add("Authorization", "Bearer token");
+            request.Headers.Add("x-api-user", "email:");
+            request.Method = "GET";
+            request.Accept = "*/*";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+            var response = (HttpWebResponse)request.GetResponse();
+
+            string result = "";
+            using (Stream responseStream = response.GetResponseStream())
+            {
+                using (StreamReader rdr = new StreamReader(responseStream))
+                {
+                    result = rdr.ReadToEnd();
+                }
+            }
