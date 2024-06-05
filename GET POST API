@@ -1,0 +1,135 @@
+ public ActionResult API()
+        {
+            ViewBag.Message = "Made By Muhammad Furqan";
+            
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("Link");
+            request.Headers.Add("Authorization", "TOKEN");
+            request.Headers.Add("x-api-user", "email:Email");
+            request.Method = "GET";
+            request.Accept = "*/*";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+            var response = (HttpWebResponse)request.GetResponse();
+
+            string result = "";
+            using (Stream responseStream = response.GetResponseStream())
+            {
+                using (StreamReader rdr = new StreamReader(responseStream))
+                {
+                    result = rdr.ReadToEnd();
+                }
+            }
+
+            Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(result);
+
+            return View(myDeserializedClass);
+
+
+        }
+        [HttpPost]
+        public ActionResult About(string libraryDocumentId)
+        {
+            var agreement = new AgreementModel.Roots
+            {
+                documentCreationInfo = new AgreementModel.DocumentCreationInfo
+                {
+                    fileInfos = new List<AgreementModel.FileInfo> {
+                new AgreementModel.FileInfo {
+                    libraryDocumentId = "TransientDocumentId1"
+                },
+                new AgreementModel.FileInfo {
+                    libraryDocumentId = "TransientDocumentId2"
+                }
+            },
+                    name = "Dummy Agreement",
+                    recipientSetInfos = new List<AgreementModel.RecipientSetInfo> {
+                new AgreementModel.RecipientSetInfo {
+                    recipientSetMemberInfos = new List < AgreementModel.RecipientSetMemberInfo > {
+                            new AgreementModel.RecipientSetMemberInfo {
+                                email = "email"
+                            },
+                            new AgreementModel.RecipientSetMemberInfo {
+                                email = "email"
+                            }
+                        },
+                        recipientSetRole = "SIGNER"
+                }
+            },
+                    signatureType = "ESIGN",
+                    signatureFlow = "SEQUENTIAL"
+                }
+            };
+
+
+            if (ModelState.IsValid)
+            {
+                    string apiEndpoint = "link of endpoint";
+                    string authorizationHeader = "Bearer Token";
+                    string xApiUserHeader = "emai";
+
+                    try
+                    {
+                     
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiEndpoint);
+                        request.Method = "POST";
+                        request.Headers.Add("Authorization", authorizationHeader);
+                        request.Headers.Add("x-api-user", xApiUserHeader);
+                        var client = new HttpClient();
+                        client.BaseAddress = new Uri("link");
+                        var jsonString = JsonConvert.SerializeObject(agreement)
+;
+                        var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                        var response = client.PostAsync("posts", content).Result;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+                            Console.WriteLine(responseContent);
+                            
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: " + response.StatusCode);
+                        }
+                            //return View();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                        ViewBag.ErrorMessage = $"Error submitting email: {ex.Message}";
+                        return View("Error");
+                    }
+
+                        
+            }
+            
+
+              return About();
+
+          
+
+            //var json = System.Text.Json.JsonSerializer.Serialize(/*make object where all data store*/);
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //using (var client = new HttpClient())
+            //{
+            //    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearertoken");
+            //    //here is the client data
+            //    var response = client.PostAsync("link",content).Result;
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        return RedirectToAction("Confirmation");
+            //    }
+            //    else
+            //    {
+            //        return View();
+            //    }
+            //   // Roots myDeserializedClass = JsonConvert.DeserializeObject<Roots>(/*where result store*/);
+            //    // return View();
+
+
+
+
+
+        }
