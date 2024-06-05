@@ -1,0 +1,32 @@
+        public void DownloadAgreement(string Method , string Accept , string x_Api_User, string Authorization, string Agreementid)
+        {
+            Console.WriteLine("enter the method Get or Post");
+            Method= Console.ReadLine();
+            Console.WriteLine("enter the accept method */* or application/pdf;encoding=base64 ");
+            Accept = Console.ReadLine();
+            Console.WriteLine("enter the x_api_user");
+            x_Api_User = Console.ReadLine();
+            Console.WriteLine("enter the autherization with bearer(key)");
+            Authorization = Console.ReadLine();
+            Console.WriteLine("enter the agreement id");
+            Agreementid = Console.ReadLine();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+           
+            string apiUrl = $"link of aggrement from their official web" + Agreementid + "/combinedDocument";
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
+            request.Headers.Add("Authorization", Authorization);
+            request.Headers.Add("x-api-user", x_Api_User);
+            request.Method = Method;
+            request.Accept = Accept;
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+            var response = (HttpWebResponse)request.GetResponse();
+
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string stream = reader.ReadToEnd();
+                byte[] contect = Convert.FromBase64String(stream);
+                File.WriteAllBytes("Agreement.pdf", contect);
+                Console.WriteLine("Agreement downloaded successfully.");
+            }
+        }
